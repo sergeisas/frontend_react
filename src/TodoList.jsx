@@ -1,15 +1,20 @@
 import { useState } from "react";
 
 import TodoTable from "./TodoTable";
+
 function TodoList() {
 
     const [desc, setDesc] = useState("");
+    const [priority, setPriority] = useState("");
     const [date, setDate] = useState("");
     const [todos, setTodos] = useState([]);
 
 
     const handleDescChange = (event) => {
         setDesc(event.target.value);
+    };
+    const handlePriorityChange = (event) => {
+        setPriority(event.target.value);
     };
 
     const handleDateChange = (event) => {
@@ -18,8 +23,9 @@ function TodoList() {
 
     const addTodo = () => {
         if (desc.trim() !== "" && date.trim() !== "") {
-            setTodos([...todos, { description: desc, date: date }]);
+            setTodos([...todos, { description: desc,priority: priority, date: date }]);
             setDesc("");
+            setPriority("");
             setDate("");
         }
     };
@@ -35,6 +41,12 @@ function TodoList() {
                 onChange={handleDescChange} 
                 value={desc} 
             />
+           <select value={priority} onChange={handlePriorityChange}> {/* Dropdown for priority */}
+                <option value="">Select Priority</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>
             <input 
                 type="text"
                 placeholder="Date (YYYY-MM-DD)" 

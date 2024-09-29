@@ -2,34 +2,41 @@
 
 import PropTypes from 'prop-types';
 
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-material.css'; // Material Design theme
+
+
 const TodoTable = ({ todos, onDelete }) => {
-  return (
-      <table>
-          <thead>
-              <tr>
-                  <th>Description</th>
-                  <th>Date</th>
-                  <th>Action</th>
-              </tr>
-          </thead>
-          <tbody>
-              {todos.map((todo, index) => (
-                  <tr key={index}>
-                      <td>{todo.description}</td>
-                      <td>{todo.date}</td>
-                      <td>
-                          <button onClick={() => onDelete(index)}>Delete</button>
-                      </td>
-                  </tr>
-              ))}
-          </tbody>
-      </table>
-  );
-}
-  
+    const columnDefs = [
+      { headerName: "Description", field: "description", sortable: false, filter: true, },
+      { headerName: "Priority", field: "priority", sortable: true, filter: true, 
+      cellStyle: params => params.value === "High" ? {color: 'red'} : {color: 'black'} },
+      { headerName: "Date", field: "date", sortable: true, filter: true,  },
+      {
+        headerName: "Actions",
+        cellRendererFramework: (params) => (
+          <button onClick={() => onDelete(params.rowIndex)}>Delete</button>
+        ),
+      },
+    ];
+    return (
+        <div className="ag-theme-material" style={{ height: 500, width: 700 }}>
+          <AgGridReact
+            rowData={todos}
+            columnDefs={columnDefs}
+            animateRows={true}
+            floatingFilter={true}
+            domLayout='autoHeight'
+          />
+        </div>
+      );
+    };
+    
+    export default TodoTable;
+
+
   TodoTable.propTypes = {
     todos: PropTypes.array.isRequired,
     onDelete: PropTypes.func.isRequired
   };
-
-  export default TodoTable;
